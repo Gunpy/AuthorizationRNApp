@@ -39,6 +39,54 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 17,
         marginLeft: 20,
+    },
+    welcomeText:{
+        fontSize: 25,
+        fontWeight: 'bold',
+        marginBottom: 20,
+    },
+    social:{
+        flexDirection: "row",
+        justifyContent: "space-between",
+        width: '90%',
+        marginBottom: 30,
+    },
+    imageSocial:{
+        width: 150,
+        height: 50,
+        borderRadius: 10,
+    },
+    errorText:{
+        fontSize: 18,
+        marginHorizontal: 20,
+        color: 'red',
+        opacity: 0.5,
+    },
+    logOutButton:{
+        height:50,
+        borderBottomWidth:1,
+        alignItems:'center',
+        flexDirection:'row',
+        padding: 10,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.18,
+        shadowRadius: 1.00,
+
+        elevation: 1
+    },
+    logOutText:{
+        fontSize: 15,
+        fontWeight: "bold",
+    },
+    fireBase:{
+        padding: 15,
+        fontSize: 15,
+        fontWeight: "bold",
+        textAlign:'center'
     }
 })
 

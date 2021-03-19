@@ -21,8 +21,15 @@
             "certificate_hash": "d5a0ff0384250172a8feba621b1029ce33fe8639"
           }
         },
+        {"web":
         {
-          "client_id": "548744849892-9nmmot69h7k77rmmgvhgjgvg82ani6d2.apps.googleusercontent.com",
+          "client_id":"548744849892-7dgt13pfohetiglf81258c677rp29hmt.apps.googleusercontent.com",
+          "project_id":"testlogin-9fcb8","auth_uri":"https://accounts.google.com/o/oauth2/auth",
+          "token_uri":"https://oauth2.googleapis.com/token",
+          "auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs"}
+        },
+        {
+            "client_id": "548744849892-9nmmot69h7k77rmmgvhgjgvg82ani6d2.apps.googleusercontent.com",
           "client_type": 3
         }
       ],

@@ -4,7 +4,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../style/styles'
 import {Actions} from "react-native-router-flux";
 import auth from '@react-native-firebase/auth';
-import { LoginManager, AccessToken } from 'react-native-fbsdk';
+import {LoginManager, AccessToken} from 'react-native-fbsdk';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+
+
+GoogleSignin.configure({
+    webClientId: "38750267377-7bdo10ldde31spm8o26idin7cs8pfjha.apps.googleusercontent.com",
+});
 
 
 export interface getFromApi {
@@ -17,10 +23,6 @@ interface inputData {
     email: string,
 }
 
-interface inputError {
-    password: string,
-    email: string,
-}
 
 const Main = () => {
     const [state, setState] = useState<getFromApi>({duration: 0, token: ''});
@@ -33,7 +35,6 @@ const Main = () => {
             if (token !== null) {
                 Actions.inLogin();
             }
-            console.log('token', token)
         }
         getToken();
     }, [])
@@ -85,6 +86,7 @@ const Main = () => {
         }))
         setError('');
     }
+
     async function onFacebookButtonPress() {
         const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
 
@@ -101,44 +103,55 @@ const Main = () => {
         return auth().signInWithCredential(facebookCredential);
     }
 
-    const  handleFacebookLogin = ()=>{
-        onFacebookButtonPress().then(res=>{
-            if(res.user.uid){
-                AsyncStorage.setItem('@token',JSON.stringify(res.user.uid))
+    const handleFacebookLogin = () => {
+        onFacebookButtonPress().then(res => {
+            if (res.user.uid) {
+                AsyncStorage.setItem('@token', JSON.stringify(res.user.uid))
                 Actions.inLogin()
             }
-            console.log(res)
-        }).catch(error=> {
+        }).catch(error => {
             throw new Error(`Error Auth from Facebook ${error}`)
         })
     }
+
+    async function onGoogleButtonPress() {
+        try{
+        console.log('Work')
+        const { idToken } = await GoogleSignin.signIn();
+        console.log('NotWork')
+        const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+        return auth().signInWithCredential(googleCredential);
+        }catch(error) {
+            console.log(error)
+        }
+    }
+
+    const handleGoogleLogin = () => {
+        onGoogleButtonPress().then(res => {
+            // @ts-ignore
+            if (res.user.uid) {
+                // @ts-ignore
+                AsyncStorage.setItem('@token', JSON.stringify(res.user.uid))
+                Actions.inLogin()
+            }
+            console.log('res google',res)
+        }).catch(error => {
+            throw new Error(`Error Auth from Google ${error}`)
+        })
+    }
+
     return (
 
         <View style={styles.container}>
-            <Text style={{
-                fontSize: 25,
-                fontWeight: 'bold',
-                marginBottom: 20,
-            }}>Welcome in my App</Text>
-            <View style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                width: '90%',
-                marginBottom: 30,
-            }}>
+            <Text style={styles.welcomeText}>Welcome in my App</Text>
+            <View style={styles.social}>
                 <TouchableOpacity onPress={handleFacebookLogin}>
-                    <Image style={{
-                        width: 150,
-                        height: 50,
-                        borderRadius: 10,
-                    }} source={require('../assets/authFacebook.png')}/>
+                    <Image style={styles.imageSocial}
+                           source={require('../assets/authFacebook.png')}/>
                 </TouchableOpacity>
-                <TouchableOpacity>
-                    <Image style={{
-                        width: 150,
-                        height: 50,
-                        borderRadius: 10,
-                    }} source={require('../assets/authGoogle.png')}/>
+                <TouchableOpacity   onPress={handleGoogleLogin}>
+                    <Image style={styles.imageSocial}
+                           source={require('../assets/authGoogle.png')}/>
                 </TouchableOpacity>
             </View>
             <View style={styles.formContainer}>
@@ -171,12 +184,7 @@ const Main = () => {
                     onPress={getApi}>
                     <Text style={styles.submitButtonText}> Submit </Text>
                 </TouchableOpacity>
-                {!!error && <Text style={{
-                    fontSize: 18,
-                    marginHorizontal: 20,
-                    color: 'red',
-                    opacity: 0.5,
-                }}>* {error}</Text>}
+                {!!error && <Text style={styles.errorText}>* {error}</Text>}
             </View>
         </View>
     )
